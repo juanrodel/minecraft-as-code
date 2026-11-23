@@ -1,13 +1,13 @@
 # Automated Minecraft & Monitoring Stack
 
-An end-to-end Infrastructure as Code (IaC) and automated deployment pipeline for hosting a Minecraft Java server (`itzg/minecraft-server`), automated local backups, Prometheus/Grafana metrics, and an external Gatus + Caddy status page.
+An end-to-end Infrastructure as Code (IaC) for hosting a Minecraft Java server (`itzg/minecraft-server`), automated local backups, Prometheus/Grafana metrics, and an external Gatus + Caddy status page.
 
 ## Architecture Overview
 
 - **Containerization (Docker Compose):** Separates workloads into a **Game Host** stack (Minecraft, `mc-backup`, Prometheus, Grafana) and a **Status** stack (Gatus health probes + Caddy automatic HTTPS reverse proxy).
 - **Configuration Management (Ansible):** Idempotent roles (`game-host` and `status-vm`) provision Docker, manage host directories, and deploy Compose stacks.
 - **Cloud Provisioning (Terraform):** Provides ready-to-apply AWS EC2 infrastructure modules (`terraform/`) for migrating from bare metal to multi-VM cloud hosting.
-- **CI/CD (GitHub Actions):** Automatically formats and validates Terraform configurations on every push before executing Ansible deployments over Tailscale.
+- **CI/CD (GitHub Actions):** Automatically formats and validates Terraform configurations on every push.
 
 ## Deployment Modes
 
