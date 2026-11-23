@@ -1,11 +1,39 @@
-- name: Install Docker and Docker Compose plugin
+- name: Install prerequisite packages for Docker repository
   ansible.builtin.apt:
     name:
-      - docker.io
-      - docker-compose-v2
+      - ca-certificates
+      - curl
     state: present
     update_cache: yes
 
+- name: Ensure /etc/apt/keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Docker official GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Add Docker official repository for Debian
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    filename: docker
+    state: present
+
+- name: Install Docker and Docker Compose plugin
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+    update_cache: yes
+    
 - name: Ensure Docker service is started and enabled
   ansible.builtin.service:
     name: docker
