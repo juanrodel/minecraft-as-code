@@ -1,0 +1,6 @@
+endpoints:
+  - name: Minecraft Server
+    url: "tcp://localhost:25565"
+    interval: 30s
+    conditions:
+      - "[CONNECTED] == true"

@@ -1,0 +1,50 @@
+# itzg/minecraft-server + local backup + Prom/Grafana
+
+services:
+  minecraft:
+    image: itzg/minecraft-server:2026.3.3
+    container_name: mc-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"            # PaperMC offers optimal performance & Prometheus metrics plugins
+      MEMORY: "4G"
+    volumes:
+      - mc-data:/data
+    restart: unless-stopped
+
+  mc-backup:
+    image: itzg/mc-backup:latest
+    container_name: mc-backup
+    environment:
+      RCON_HOST: minecraft
+      SRC_DIR: /data
+      DEST_DIR: /backups
+      PRUNE_BACKUPS_DAYS: 7
+    volumes:
+      - mc-data:/data:ro
+      - ./local_backups:/backups   # Local host directory for backups
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+
+volumes:
+  mc-data:
+  prom-data:
+  grafana-data:

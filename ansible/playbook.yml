@@ -1,0 +1,11 @@
+- name: Configure Game Host VM
+  hosts: game_host
+  become: true
+  roles:
+    - game-host
+
+- name: Configure Status VM
+  hosts: status_vm
+  become: true
+  roles:
+    - status-vm
