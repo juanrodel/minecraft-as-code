@@ -1,24 +1,32 @@
-version: '3.8'
-
 services:
-  gatus:
-    image: twinproduction/gatus:latest
-    container_name: gatus
-    volumes:
-      - ./config.yaml:/config/config.yaml
-    restart: unless-stopped
-
   caddy:
-    image: caddy:latest
+    image: caddy:2-alpine
     container_name: caddy
+    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy-data:/data
       - caddy-config:/config
+
+  gatus:
+    image: twinproduction/gatus:latest
+    container_name: gatus
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config.yaml:/config/config.yaml
+
+  mc-query:
+    image: ghcr.io/e-m-b-a/mcstatus-api:latest
+    container_name: mc-query
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   caddy-data:

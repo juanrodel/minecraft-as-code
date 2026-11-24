@@ -4,7 +4,7 @@
         reverse_proxy mc-query:8000
     }
 
-    handle_path /gatus* {
+    handle {
         reverse_proxy gatus:8080
     }
 }
