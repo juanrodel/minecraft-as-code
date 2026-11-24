@@ -3,6 +3,7 @@
     name:
       - ca-certificates
       - curl
+      - python3-debian
     state: present
     update_cache: yes
 
