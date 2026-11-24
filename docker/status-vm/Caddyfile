@@ -1,4 +1,6 @@
-::80 {
+:443 {
+    tls internal
+
     handle /api/status {
         rewrite * /status/host.docker.internal:25565
         reverse_proxy mc-query:8000
