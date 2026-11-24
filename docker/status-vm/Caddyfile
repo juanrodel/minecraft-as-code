@@ -1,3 +1,15 @@
-:80 {
-    reverse_proxy gatus:8080
+::80 {
+    handle /api/status {
+        rewrite * /status/host.docker.internal:25565
+        reverse_proxy mc-query:8000
+    }
+
+    handle_path /gatus* {
+        reverse_proxy gatus:8080
+    }
+
+    handle {
+        root * /srv
+        file_server
+    }
 }

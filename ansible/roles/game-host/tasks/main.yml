@@ -19,9 +19,13 @@
     mode: '0644'
 
 - name: Add Docker official repository for Debian
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
-    filename: docker
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/debian
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: stable
+    signed_by: https://download.docker.com/linux/debian/gpg
     state: present
 
 - name: Install Docker and Docker Compose plugin
